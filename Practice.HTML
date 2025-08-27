@@ -1,14 +1,347 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Basketball Shootout</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #90EE90 100%);
+            border: 3px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .court {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: #D2691E;
+            border-top: 3px solid #8B4513;
+        }
+
+        .hoop {
+            position: absolute;
+            top: 200px;
+            right: 50px;
+            width: 80px;
+            height: 20px;
+        }
+
+        .rim {
+            width: 80px;
+            height: 8px;
+            background: #FF6347;
+            border: 2px solid #B22222;
+            border-radius: 40px;
+        }
+
+        .net {
+            margin-top: -2px;
+            width: 76px;
+            height: 30px;
+            border-left: 2px solid #FFF;
+            border-right: 2px solid #FFF;
+            border-bottom: 2px solid #FFF;
+            border-radius: 0 0 38px 38px;
+            margin-left: 2px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .backboard {
+            position: absolute;
+            top: -80px;
+            right: -10px;
+            width: 15px;
+            height: 100px;
+            background: #FFF;
+            border: 2px solid #DDD;
+        }
+
+        .ball {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #FF8C00, #FF4500);
+            border-radius: 50%;
+            border: 2px solid #B8860B;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 10;
+        }
+
+        .ball::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 13px;
+            width: 2px;
+            height: 26px;
+            background: #8B4513;
+        }
+
+        .ball::after {
+            content: '';
+            position: absolute;
+            top: 13px;
+            left: 2px;
+            width: 26px;
+            height: 2px;
+            background: #8B4513;
+        }
+
+        .player {
+            position: absolute;
+            bottom: 150px;
+            left: 100px;
+            width: 40px;
+            height: 80px;
+            background: #4169E1;
+            border-radius: 20px 20px 5px 5px;
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            background: #DEB887;
+            border-radius: 50%;
+        }
+
+        .scoreboard {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #00FF00;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .shoot-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FF6347, #FF4500);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255,99,71,0.4);
+        }
+
+        .shoot-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,99,71,0.6);
+        }
+
+        .reset-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #32CD32, #228B22);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(50,205,50,0.4);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(50,205,50,0.6);
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
 </head>
 <body>
-    <H1>
-        Stephen Curry is better than LeBron James 
-    </H1>
-    
+    <div class="game-container">
+        <div class="court"></div>
+        
+        <div class="hoop">
+            <div class="backboard"></div>
+            <div class="rim"></div>
+            <div class="net"></div>
+        </div>
+
+        <div class="player"></div>
+        <div class="ball" id="ball"></div>
+
+        <div class="scoreboard">
+            <div>Score: <span id="score">0</span></div>
+            <div>Attempts: <span id="attempts">0</span></div>
+            <div>Accuracy: <span id="accuracy">0%</span></div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="controls">
+            <button class="shoot-btn" onclick="shootBall()">SHOOT! 🏀</button>
+            <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let attempts = 0;
+        let isAnimating = false;
+
+        function shootBall() {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            attempts++;
+            
+            const ball = document.getElementById('ball');
+            const message = document.getElementById('message');
+            
+            // Reset ball position
+            ball.style.left = '130px';
+            ball.style.bottom = '230px';
+            ball.style.transform = 'rotate(0deg)';
+            
+            // Random shot accuracy
+            const accuracy = Math.random();
+            const isGoodShot = accuracy > 0.3; // 70% success rate
+            
+            setTimeout(() => {
+                if (isGoodShot) {
+                    // Successful shot animation
+                    ball.style.left = '680px';
+                    ball.style.bottom = '380px';
+                    ball.style.transform = 'rotate(720deg)';
+                    
+                    setTimeout(() => {
+                        ball.style.bottom = '340px';
+                        score++;
+                        showMessage('SWISH! 🎉');
+                        playNetAnimation();
+                    }, 400);
+                } else {
+                    // Missed shot animation
+                    const missDirection = Math.random() > 0.5 ? 'left' : 'right';
+                    if (missDirection === 'left') {
+                        ball.style.left = '650px';
+                        ball.style.bottom = '300px';
+                    } else {
+                        ball.style.left = '750px';
+                        ball.style.bottom = '350px';
+                    }
+                    ball.style.transform = 'rotate(540deg)';
+                    
+                    setTimeout(() => {
+                        ball.style.bottom = '150px';
+                        showMessage('Miss! Try again 🏀');
+                    }, 400);
+                }
+                
+                updateScore();
+                
+                setTimeout(() => {
+                    resetBallPosition();
+                    isAnimating = false;
+                }, 1200);
+            }, 100);
+        }
+
+        function playNetAnimation() {
+            const net = document.querySelector('.net');
+            net.style.animation = 'bounce 0.6s ease-in-out';
+            setTimeout(() => {
+                net.style.animation = '';
+            }, 600);
+        }
+
+        function resetBallPosition() {
+            const ball = document.getElementById('ball');
+            ball.style.transition = 'all 0.3s ease';
+            ball.style.left = '130px';
+            ball.style.bottom = '230px';
+            ball.style.transform = 'rotate(0deg)';
+            
+            setTimeout(() => {
+                ball.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            }, 300);
+        }
+
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.style.opacity = '1';
+            
+            setTimeout(() => {
+                message.style.opacity = '0';
+            }, 1500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('attempts').textContent = attempts;
+            
+            const accuracy = attempts > 0 ? Math.round((score / attempts) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        function resetGame() {
+            score = 0;
+            attempts = 0;
+            isAnimating = false;
+            updateScore();
+            resetBallPosition();
+            showMessage('Game Reset! 🔄');
+        }
+
+        // Initialize ball position
+        resetBallPosition();
+    </script>
 </body>
 </html>

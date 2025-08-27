@@ -36,16 +36,15 @@
 // console.log(e)
 
  
-// function getUniqueVowels (str) {
-//     const vowels = "aeiou" ;
-//     const found = new Set () ;
+ function getUniqueVowels (str) {
+     const vowels = "aeiou" ;
+     const found = new Set () ;
 
-//     for (let char of str.toLowerCase()) {
-//         if (vowels.includes(char)) {
-//             found.add(char) ;
-//         }
-//     }
-//       return Array.from(found) . join ("") ;
-// }
-// console.log(getUniqueVowels("antimonopolygeographicationalism"))
-
+     for (let char of str.toLowerCase()) {
+         if (vowels.includes(char)) {
+             found.add(char) ;
+         }
+     }
+       return Array.from(found) . join ("") ;
+ }
+ console.log(getUniqueVowels("antimonopolygeographicationalism"))
